@@ -22,7 +22,5 @@
         "psr-0": { "Bgy\\CoreTrackerBundle": "" }
     },
 
-    "minimum-stability": "dev",
-
-    "target-dir": "Bgy/CoreTrackerBundle"
+    "minimum-stability": "dev"
 }
