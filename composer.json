@@ -6,7 +6,21 @@
             "email": "guery.b@gmail.com"
         }
     ],
+    "repositories": [
+        {
+            "type":"vcs",
+            "url":"/Users/bguery/Workspace/bgy-coretracker"
+        }
+    ],
     "require": {
+        "php": ">=5.3.2",
+        "borisguery/coretracker": "dev-master",
+        "symfony/framework-bundle": ">=2.0,<2.3-dev",
+        "zendframework/zend-text": "2.1"
+    },
+    "autoload": {
+        "psr-0": { "Bgy\\CoreTrackerBundle": "" }
+    },
 
-    }
+    "target-dir": "Bgy/CoreTrackerBundle"
 }
