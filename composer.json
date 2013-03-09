@@ -1,0 +1,12 @@
+{
+    "name": "borisguery/coretracker-bundle",
+    "authors": [
+        {
+            "name": "Boris Guery",
+            "email": "guery.b@gmail.com"
+        }
+    ],
+    "require": {
+
+    }
+}
