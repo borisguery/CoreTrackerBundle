@@ -55,25 +55,17 @@ class CoreStatsCommand extends Command
             throw new \RuntimeException(sprintf('"%s" is not a valid file.', $coredumpFile));
         }
 
-        $dump = unserialize(file_get_contents($coredumpFile));
+        $coredump = unserialize(file_get_contents($coredumpFile));
 
-        if (empty($dump) || !isset($dump['collectedData'])) {
-
-            $output->writeln('No collected data.');
-
-            return;
-        }
-
-        $collectedData = $dump['collectedData'];
-
-        $sorter->sort($collectedData);
+        $sorter->sort($coredump);
 
         $table = new Table(array('columnWidths' => array(60, 8), 'padding' => 2));
 
         $rowCount = 0;
 
         $filters = array();
-        $filters[] = new NamespaceFilterStrategy(array('Baz\Faz'), true);
+        // At least we remove ourselves
+        $filters[] = new NamespaceFilterStrategy(array('Bgy\CoreTracker'), false);
 
         if ($threshold > -1) {
             $filters[] = new CallThresholdFilterStrategy($input->getOption('threshold'));
@@ -81,21 +73,17 @@ class CoreStatsCommand extends Command
 
         $filter = new ChainedFilterStrategy($filters);
 
-        $collectedData = array(
-            array('className' => 'Foo\Bar', 'calls' => 5),
-            array('className' => 'Baz\Faz', 'calls' => 10)
-        );
+        /** @var $collectedClass \Bgy\CoreTracker\CollectedClass */
+        foreach ($coredump as $collectedClass) {
+            ++$rowCount;
 
-        foreach ($collectedData as $hash => $data) {
-
-            if ($filter->shouldBeFiltered($data)) {
+            if ($filter->shouldBeFiltered($collectedClass)) {
                 continue;
             }
             $row = new Row();
-            $row->appendColumn(new Column($data['className'], Column::ALIGN_LEFT));
-            $row->appendColumn(new Column((string) $data['calls'], Column::ALIGN_CENTER));
+            $row->appendColumn(new Column($collectedClass->className, Column::ALIGN_LEFT));
+            $row->appendColumn(new Column((string) $collectedClass->calls, Column::ALIGN_CENTER));
             $table->appendRow($row);
-            ++$rowCount;
         }
 
         if ($rowCount) {
