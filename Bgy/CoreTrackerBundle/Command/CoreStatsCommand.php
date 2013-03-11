@@ -10,6 +10,7 @@ use Bgy\CoreTracker\Filter\ChainedFilterStrategy;
 use Bgy\CoreTracker\Filter\NamespaceFilterStrategy;
 use Bgy\CoreTracker\Sorter\CallSorterStrategy;
 use Bgy\CoreTracker\Sorter\ClassNameSorterStrategy;
+use Bgy\CoreTrackerBundle\Processor\Processor;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -57,8 +58,6 @@ class CoreStatsCommand extends Command
 
         $coredump = unserialize(file_get_contents($coredumpFile));
 
-        $sorter->sort($coredump);
-
         $table = new Table(array('columnWidths' => array(60, 8), 'padding' => 2));
 
         $rowCount = 0;
@@ -73,13 +72,12 @@ class CoreStatsCommand extends Command
 
         $filter = new ChainedFilterStrategy($filters);
 
+        $processor = new Processor($filter, $sorter);
+        $processor->process($coredump);
+
         /** @var $collectedClass \Bgy\CoreTracker\CollectedClass */
         foreach ($coredump as $collectedClass) {
             ++$rowCount;
-
-            if ($filter->shouldBeFiltered($collectedClass)) {
-                continue;
-            }
             $row = new Row();
             $row->appendColumn(new Column($collectedClass->className, Column::ALIGN_LEFT));
             $row->appendColumn(new Column((string) $collectedClass->calls, Column::ALIGN_CENTER));
