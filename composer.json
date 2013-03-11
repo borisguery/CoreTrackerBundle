@@ -9,7 +9,7 @@
     "repositories": [
         {
             "type":"vcs",
-            "url":"/Users/bguery/Workspace/bgy-coretracker"
+            "url":"https://github.com/borisguery/CoreTracker"
         }
     ],
     "require": {
