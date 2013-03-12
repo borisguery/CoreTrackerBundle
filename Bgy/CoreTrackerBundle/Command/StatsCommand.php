@@ -20,7 +20,7 @@ use Zend\Text\Table\Column;
 use Zend\Text\Table\Row;
 use Zend\Text\Table\Table;
 
-class CoreStatsCommand extends Command
+class StatsCommand extends Command
 {
     protected function configure()
     {
